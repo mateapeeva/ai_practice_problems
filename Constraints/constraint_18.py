@@ -1,21 +1,28 @@
 from constraint import *
 
 if __name__ == '__main__':
-    solver_in = input()
-    problem = Problem(globals()[solver_in]())
+    solvers = {
+        "BacktrackingSolver": BacktrackingSolver(),
+        "MinConflictsSolver": MinConflictsSolver(),
+        "RecursiveBacktrackingSolver": RecursiveBacktrackingSolver()
+    }
+
+    solve = input()
+    problem = Problem(solvers.get(solve))
 
     variables = list(range(81))
     domain = list(range(1,10))
 
-    problem.addVariables(variables,domain)
+    for var in variables:
+        problem.addVariable(var,domain)
 
     # Constraint 1: same block
     for row_start in range(0,9,3):
         for col_start in range(0,9,3):
             block_variables = []
-            for i in range(3):
-                for j in range(3):
-                    block_variables.append((row_start+i)*9 + col_start+j)
+            for r in range(3):
+                for c in range(3):
+                    block_variables.append((row_start+r)*9 + col_start+c)
             problem.addConstraint(AllDifferentConstraint(),block_variables)
 
     # Constraint 2: row
@@ -30,6 +37,6 @@ if __name__ == '__main__':
 
     solution = problem.getSolution()
     if solution is not None:
-        print(dict(sorted(solution.items())))
+        print(solution)
     else:
         print(None)
