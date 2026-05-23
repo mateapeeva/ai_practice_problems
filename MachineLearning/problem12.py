@@ -150,51 +150,6 @@ if __name__ == '__main__':
         if tr_y == pr_y and tr_y == 1:
             TP += 1
         elif tr_y == pr_y and tr_y == 0:
-            TN += 1if __name__ == '__main__':
-    scaler = MinMaxScaler(feature_range=(-1,1))
-    num_neurons = int(input())
-    learning_rate = float(input())
-    col_index = int(input())
-    sample = [float(i) for i in input().split()]
-
-    X,y = [row[:-1] for row in dataset],[row[-1] for row in dataset]
-
-    split_index = int(len(dataset)*0.8)
-    train_X, train_y = X[:split_index],y[:split_index]
-    test_X, test_y = X[split_index:],y[split_index:]
-
-    scaler.fit(train_X)
-    train_X = scaler.transform(train_X)
-    test_X = scaler.transform(test_X)
-
-    params = {
-        'max_iter':20,
-        'hidden_layer_sizes':num_neurons,
-        'learning_rate_init':learning_rate,
-        'activation':'relu',
-        'random_state':0
-    }
-    classifier = MLPClassifier(**params)
-    classifier.fit(train_X,train_y)
-
-    TP,TN = 0,0
-    y_true = test_y
-    y_pred = classifier.predict(test_X)
-    for tr_y, pr_y in zip(y_true,y_pred):
-        if tr_y == pr_y and tr_y == 1:
-            TP += 1
-        elif tr_y == pr_y and tr_y == 0:
-            TN += 1
-
-    acc_test = (TP+TN)/len(test_X)
-
-    TP, TN = 0, 0
-    y_true = train_y
-    y_pred = classifier.predict(train_X)
-    for tr_y, pr_y in zip(y_true, y_pred):
-        if tr_y == pr_y and tr_y == 1:
-            TP += 1
-        elif tr_y == pr_y and tr_y == 0:
             TN += 1
 
     acc_train = (TP+TN)/len(train_X)
@@ -224,32 +179,6 @@ if __name__ == '__main__':
 
     print(sample_pred)
 
-    acc_train = (TP+TN)/len(train_X)
-
-    if acc_train > 1.15*acc_test:
-        print("Se sluchuva overfitting")
-
-        dataset_col = [[el for i,el in enumerate(row) if i != col_index] for row in dataset]
-
-        X_col,y_col = [row[:-1] for row in dataset_col], [row[-1] for row in dataset_col]
-        sample_col = [el for i,el in enumerate(sample) if i != col_index]
-
-        train_X_col, train_y_col = X_col[:split_index],y_col[:split_index]
-        test_X_col, test_y_col = X_col[split_index:],y_col[split_index:]
-
-        scaler.fit(train_X_col)
-        train_X_col = scaler.transform(train_X_col)
-        test_X_col = scaler.transform(test_X_col)
-        sample_col = scaler.transform([sample_col])
-
-        classifier.fit(train_X_col,train_y_col)
-        sample_pred = classifier.predict(sample_col)[0]
-    else:
-        sample = scaler.transform([sample])
-        sample_pred = classifier.predict(sample)[0]
-        print("Ne se sluchuva overfitting")
-
-    print(sample_pred)
 
 
 
